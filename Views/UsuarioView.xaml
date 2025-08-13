@@ -6,10 +6,24 @@
     <VerticalStackLayout>
         <Entry
             Text="{Binding Name}"
-            Placeholder="Digite o seu nome."></Entry>
+            Placeholder="Digite o seu nome."/>
 
         <Label 
-            Text="{Binding DisplayName}">
-        </Label>
+            Text="{Binding DisplayName}"/>
+
+
+        <Button
+            Command="{Binding ShowMessageCommand}"
+            Text="Message"/>
+
+        <Label
+         Text="{Binding DisplayMessage}"
+         HorizontalOptions="Center"
+         VerticalOptions="Center"/>
+
+        <Button
+            Command="{Binding CountCommand}"
+            Text="Contar Caracteres"/>
+
     </VerticalStackLayout>
 </ContentPage>
