@@ -14,6 +14,8 @@ namespace AppBindingCommands.ViewModels
         {
             ShowMessageCommand = new Command(ShowMessage);
             CountCommand = new Command(async () => await CountCaracters());
+            CleanCommand = new Command(async () => await CleanConfirmation());
+            OptionComman = new Command(async () => await ShowOptions());
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -60,7 +62,9 @@ namespace AppBindingCommands.ViewModels
             DisplayMessage = $"Boa Noite {Name}, Hoje é {data}";
         }
        
-        //Metodo para contar os caracteres
+
+
+        //  1 - Metodo para contar os caracteres
         public async Task CountCaracters()
         {
             string nameLenght =
@@ -69,23 +73,45 @@ namespace AppBindingCommands.ViewModels
             await Application.Current
                 .MainPage.DisplayAlert("Informação", nameLenght, "OK");
         }
-
         public ICommand CountCommand { get; }
 
 
-        //Metodo para exibir um alert ao usuário que a resposta sendo positiva, limpará os campos da tela
+
+        //   2 - Metodo para exibir um alert ao usuário a resposta sendo positiva, limpará os campos da tela
         public async Task CleanConfirmation()
         {
-            if (await Application.Current.MainPage.DisplayAlert("Confirmação","Confirma limpeza de dados ?","YES","NO"))
+            if (await Application.Current.MainPage
+                .DisplayAlert("Confirmação","Confirma limpeza dos dados ?","YES","NO"))
             {
                 Name = string.Empty;
-                // falta fazer...
+                DisplayMessage = string.Empty;
+                OnPropertyChanged(Name);
+                OnPropertyChanged(DisplayMessage);
+
+                await Application.Current.MainPage
+                    .DisplayAlert("Informação", "Limpeza realizada com sucesso", "Ok");
             }
         }
+        public ICommand CleanCommand { get; }
 
 
 
+        //   3 - Metodo para ..
+        public async Task ShowOptions()
+        {
+            string result = await Application.Current.MainPage.DisplayActionSheet("Selecione uma opção:", "", "Cancelar", "Limpar", "Contar Caracteres", "Exibir Saudação");
 
+            if(result != null)
+            {
+                if (result.Equals("Limpar"))
+                    await CleanConfirmation();
+                if (result.Equals("Contar Caracteres"))
+                    await CountCaracters();
+                if (result.Equals("Exibir Saudação"))
+                    ShowMessage();
+            }
+        }
+        public ICommand OptionCommand { get; }
 
     }
 }
